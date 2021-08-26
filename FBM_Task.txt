@@ -1,0 +1,147 @@
+$${
+	//	Locations
+	//	- Great Ice Wall 	: 0, 128, 160
+	//	- Goblin Burrows 	: -137, 143, 138
+	//	- Far Reserve	: -127, 150, 72
+	//	- Upper Mines	: -153, 171, -43
+	//	- Rampart's Quarrt	: -35, 156, 20
+	//	- Forge Basin	: -13, 145, -19
+	//	- Cliffside Beins	: 91, 143, 48
+	//	- Royal Mines	: 113, 150, 50
+	//	- Lava Springs	: 64, 201, -26
+
+	//	Emissary
+	//	- King		: 129, 196, 196
+	//	- Fraiser		: -133, 174, -51
+	//	- Carlton		: -73, 153, -11
+	//	- Ceanna		: 42, 134, 22
+	//	- Wilson		: 171, 150, 31
+	//	- Lilith		: 58, 198, -9
+
+	//FOR(#cmsnlp,1,3)
+	//	SET(@&commission[%#cmsnlp%],"UNKNOWN");
+	//	SET(@&cmsnloc[%#cmsnlp%],"UNKNOWN");
+	//	SET(@#priority[%#cmsnlp%],999);
+	//	SET(@#cmsnx[%#cmsnlp%],999);
+	//	SET(@#cmsny[%#cmsnlp%],999);
+	//	SET(@#cmsnz[%#cmsnlp%],999);
+	//NEXT
+
+	SET(@commissionmine,false);
+	SET(prioritized,false);
+	SET(#csmpriority,999);
+
+	// Check if Priority 1 exists.
+	FOR(#cmsnlp,1,3)
+		IF(@#priority[%#cmsnlp%] == 1)
+
+		//Get Commision
+		SET(#csmpriority,%#cmsnlp%);
+		SET(prioritized,true);
+		BREAK;
+
+		ENDIF
+	NEXT
+
+	//No priority 1, check if priority 2 Exists.
+	IF(prioritized)
+		FOR(#cmsnlp,1,3)
+		IF(@#priority[%#cmsnlp%] == 2)
+
+			//Get Commision
+			SET(#csmpriority,%#cmsnlp%);
+			SET(prioritized,true);
+			BREAK;
+
+		ENDIF
+		NEXT
+	ENDIF
+
+	//If no priority 1 or 2 set to default
+	IF((!prioritized) && (#csmpriority == 999))
+
+		LOG(%@&fb% No doable commission was found setting to defualt!);
+		SET(@default,true);
+		STOP("FBM_Task");
+
+	ENDIF
+
+	IF((prioritized) && (#csmpriority != 999))
+
+	//	Get Location of Specific Commission
+		IF(@&cmsnloc[%#csmpriority%] == "ANY")
+			SET(@#cmsnx,-153);
+			SET(@#cmsny,171);
+			SET(@#cmsnz,-43);
+		ENDIF
+	//	- Great Ice Wall 	: 0, 128, 160
+		IF(@&cmsnloc[%#csmpriority%] == "Great Ice Wall")
+			SET(@#cmsnx,0);
+			SET(@#cmsny,128);
+			SET(@#cmsnz,160);
+		ENDIF
+	//	- Goblin Burrows 	: -137, 143, 138
+		IF(@&cmsnloc[%#csmpriority%] == "Goblin Burrows")
+			SET(@#cmsnx,-137);
+			SET(@#cmsny,143);
+			SET(@#cmsnz,138);
+		ENDIF
+	//	- Far Reserve	: -127, 150, 72
+		IF(@&cmsnloc[%#csmpriority%] == "Far Reserve")
+			SET(@#cmsnx,-127);
+			SET(@#cmsny,150);
+			SET(@#cmsnz,72);
+		ENDIF
+	//	- Upper Mines	: -153, 171, -43
+		IF(@&cmsnloc[%#csmpriority%] == "Upper Mines")
+			SET(@#cmsnx,-153);
+			SET(@#cmsny,171);
+			SET(@#cmsnz,-43);
+		ENDIF
+
+	//	- Rampart's Quarry	: -35, 156, 20
+		IF(@&cmsnloc[%#csmpriority%] == "Rampart's Quarry")
+			SET(@#cmsnx,-35);
+			SET(@#cmsny,156);
+			SET(@#cmsnz,20);
+		ENDIF
+
+	//	- Forge Basin	: -13, 145, -19
+		IF(@&cmsnloc[%#csmpriority%] == "Forge Basin")
+			SET(@#cmsnx,-13);
+			SET(@#cmsny,145);
+			SET(@#cmsnz,19);
+		ENDIF
+
+	//	- Cliffside Veins	: 91, 143, 48
+		IF(@&cmsnloc[%#csmpriority%] == "Cliffside Veins")
+			SET(@#cmsnx,91);
+			SET(@#cmsny,143);
+			SET(@#cmsnz,48);
+		ENDIF
+
+	//	- Royal Mines	: 113, 150, 50
+		IF(@&cmsnloc[%#csmpriority%] == "Royal Mines")
+			SET(@#cmsnx,113);
+			SET(@#cmsny,150);
+			SET(@#cmsnz,50);
+		ENDIF
+
+	//	- Lava Springs	: 64, 201, -26
+		IF(@&cmsnloc[%#csmpriority%] == "Lava Springs")
+			SET(@#cmsnx,64);
+			SET(@#cmsny,201);
+			SET(@#cmsnz,-26);
+		ENDIF
+
+		//Start Commission
+		//FUTURE REFRENCE - NEED TO ADD "MINE" "SLAYING" "EVENT" IN FBM_Baritone
+		LOG(%@&fb% Commission found! Going to &b%@&cmsnloc[%#csmpriority%]%&r&f for &b%@&commission[%#csmpriority%]%);
+		SET(@ongoing,true);
+		SET(@commissionmine,true);
+
+	ENDIF
+
+}$$
+
+

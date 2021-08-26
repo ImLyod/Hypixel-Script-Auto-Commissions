@@ -1,0 +1,42 @@
+$${
+
+	//Mining Speed Boost is now available!
+	//Mining Speed Boost is now available!
+	//Your Mithril Drill SX-R326 is empty! Refuel it by talking to Jotraeline Greatforge in the Dwarven Mines!
+	//Your pp-gunG is empty!
+
+	STRIP(&chat,%CHAT%)
+
+	//Refuel Time
+	IFCONTAINS(%&chat%,"is empty! Refuel it by talking to Jotraeline Greatforge in the Dwarven Mines!")
+
+		//Refuel
+		SET(@refuel,true);
+		IF(!@ongoing)
+			SET(@ongoing,true);
+		ENDIF
+
+	ENDIF
+
+	//Commission Completed
+	IFCONTAINS(%&chat%,"Commission Complete! Visit the King to claim your rewards!")
+
+		//Claim & Set 
+		SET(@claim,true);
+		IF(!@ongoing)
+			SET(@ongoing,true);
+		ENDIF
+
+	ENDIF
+
+	//Use Speed Boost
+	IFCONTAINS(%&chat%,"Mining Speed Boost is now available!")
+
+		//Use Boost
+		SET(@speedboost,true);
+
+	ENDIF
+
+	//Event Detection
+	
+}$$

@@ -1,0 +1,83 @@
+$${
+	&royalmines = "4,328,184 25,325,205 44,329,224 27,340,207 43,343,223 37,3,217 59,1,239 68,1,248 75,10,255 70,15,250 93,26,273 92,35,272 96,52,276 59,28,239 13,40,192 315,33,135 260,38,79 265,19,84 247,11,67 230,18,50 216,30,36 209,34,29";
+	&lavasprings = "270,52,90 250,45,70 266,37,86 255,34,75 267,22,87 256,16,76 268,2,88 260,358,80 275,350,95 282,322,102 328,291,148 339,312,159 344,336,164 321,343,141 296,2,116 288,24,108 309,29,129 353,28,173 357,1,177 22,357,202 22,332,202 33,311,213 56,295,236 69,305,249 75,315,255 68,324,248 69,0,249 80,5,260 66,11,246 62,17,242 83,21,263 52,52,232";
+	&gabesrefined = "284,337,104 233,1,53 14,37,194 132,43,312 106,0,286 81,1,261";
+	&cliffsideveins = "352,53,172 328,44,148 320,39,140 336,34,156 355,35,175 356,20,176 338,19,157 325,29,145 339,4,159 354,0,174 0,349,180 11,347,191 21,336,201 38,335,218 30,345,210 18,359,198 36,1,216 24,15,204 36,23,217 56,16,236 57,356,237 59,347,239 51,332,231 66,324,246 84,319,264 102,323,282 87,333,267 85,358,265 101,1,281 116,10,296 95,19,275 85,39,265";
+	&uppermines = "68,37,248 42,30,222 19,33,199 16,26,196 30,24,210 23,14,203 18,1,198 22,351,202 27,350,307 23,1,203 34,1,214 37,18,217 47,19,227 59,18,239 59,1,239 55,349,235 19,333,199 16,299,196 12,272,192 51,283,231 51,321,231 79,0,259 119,353,299 125,336,305 143,309,323 154,330,334 177,298,357 177,323,357 178,343,358 179,3,359 166,9,346 176,20,356 174,56,354 135,32,315";
+	&rampartquarry = "13,324,193 358,323,178 0,311,180 351,294,171 315,280,135 294,296,114 317,305,137 331,316,151 295,315,115 275,314,95 269,323,89 257,323,77 253,315,73 244,303,64 222,299,42 220,318,40 235,331,55 244,338,64 213,345,33 213,5,33 219,15,39 231,12,51 241,9,61 258,8,78 261,18,81 272,27,93 275,37,95 292,55,112 309,45,130 354,28,174 359,15,179 18,14,198 40,336,220";
+
+	STOP("FBM_Target");
+	WAIT(100ms);
+	EXEC(FBM_Target.txt,"FBM_Target");
+
+	//	- LavaSprings
+	IF((%XPOS% == 64) && (%YPOS% == 201) && (%ZPOS% == -26))
+		
+		&mainsource[] = SPLIT(" ","%&lavasprings%"); 
+		ARRAYSIZE(&mainsource,#asize);
+		LOG(%@&fb% Starting script for &bLava Springs.);
+	
+	//	- Royal Mines
+	ELSEIF((%XPOS% == 113) && (%YPOS% == 150) && (%ZPOS% == 50))
+		
+		&mainsource[] = SPLIT(" ","%&royalmines%"); 
+		ARRAYSIZE(&mainsource,#asize);
+		LOG(%@&fb% Starting script for &bRoyal Mines.);
+	
+	//	- Cliffside Veins
+	ELSEIF((%XPOS% == 91) && (%YPOS% == 143) && (%ZPOS% == 48))
+		
+		&mainsource[] = SPLIT(" ","%&cliffsideveins%"); 
+		ARRAYSIZE(&mainsource,#asize);
+		LOG(%@&fb% Starting script for &bCliffside Veins.);
+		
+	//	- Upper Mines
+	ELSEIF((%XPOS% == -153) && (%YPOS% == 171) && (%ZPOS% == -43))
+		
+		&mainsource[] = SPLIT(" ","%&uppermines%"); 
+		ARRAYSIZE(&mainsource,#asize);
+		LOG(%@&fb% Starting script for &bUpper Mines.);
+		
+	//	- Rampart Quarry
+	ELSEIF((%XPOS% == -35) && (%YPOS% == 156) && (%ZPOS% == 20))
+		
+		&mainsource[] = SPLIT(" ","%&rampartquarry%"); 
+		ARRAYSIZE(&mainsource,#asize);
+		LOG(%@&fb% Starting script for &bRampart's Quarry.);
+		
+	//	Gabe's Refined
+	ELSEIF((%XPOS% == -155) && (%YPOS% == 180) && (%ZPOS% == 67))
+		
+		&mainsource[] = SPLIT(" ","%&gabesrefined%"); 
+		ARRAYSIZE(&mainsource,#asize);
+		LOG(%@&fb% Starting script for &bGabe's refined.);
+	
+	//	LOCATION NOT VALID
+	ELSE
+		LOG(%@&fb% Location not found. Please try again.);
+		STOP("FBM_TARGET");
+		STOP("FBM_MINE");
+	ENDIF
+	
+	#loopsize = ((%#asize%) - (1));
+	SET(@mine,true);
+	DO
+		FOR(#xtarget,0,%#loopsize%)
+			//LOG(%#xtarget%);
+			#angle[] = SPLIT(",",%&mainsource[%#xtarget%]%)
+			DO
+				IF(%#xtarget% == 0)
+					LOOK(%#angle[0]%,%#angle[1]%,0.80);
+				ELSE
+					LOOK(%#angle[0]%,%#angle[1]%,0.18);
+				ENDIF
+					
+			UNTIL(((%YAW% == %#angle[2]%) && (%PITCH% == %#angle[1]%)) || (HITID == "bedrock"))
+			DO
+			UNTIL((HITID == "bedrock"))
+			
+		NEXT
+		
+	UNTIL
+	
+}$$

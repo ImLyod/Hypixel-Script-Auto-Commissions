@@ -1,0 +1,264 @@
+$${
+	SET(#counter,0);
+	SET(&cmsnarray,EMPTY);
+
+	//Loop through SB
+	foreach(players)
+		IF((#counter >= 49) && (#counter <= 51))
+			STRIP(&result,%PLAYERDISPLAYNAME%);
+			&result = REPLACE(&result,"%");
+			SET(&cmsnarray[%#counter%],%&result%);
+		ENDIF
+		
+		INC(#counter,1);
+    next
+	
+	//Reset Commission
+	FOR(#cmsnlp,1,3)
+		SET(@&commission[%#cmsnlp%],"UNKNOWN");
+		SET(@&cmsnloc[%#cmsnlp%],"UNKNOWN");
+		SET(@#priority[%#cmsnlp%],999);
+		SET(@#cmsnx[%#cmsnlp%],999);
+		SET(@#cmsny[%#cmsnlp%],999);
+		SET(@#cmsnz[%#cmsnlp%],999);
+	NEXT
+
+    //Check if any commission is done
+    IFCONTAINS((%&cmsnarray[49]%,"Done") || (%&cmsnarray[50]%,"Done") || (%&cmsnarray[51]%,"Done"))
+    	
+    	//Check if claim is already active
+    	IF(@claim)
+    		//ignore
+    	ELSE
+    		SET(@claim,true);
+    		STOP("FBM_Commissions");
+    	ENDIF
+    	
+    ENDIF
+
+	SET(#xtarget,1);
+	FOR(#cmsnlp,49,51)
+
+		//	-----------------------
+		//	- REGULAR COMMISSIONS -
+		//	-----------------------
+		//Ice Walker Slayer
+		IFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Ice Walker Slayer")
+		
+			SET(@&commission[%#xtarget%],"Ice Walker Slayer");
+			SET(@#priority[%#xtarget%],3);
+			SET(@&cmsnloc[%#xtarget%],"Great Ice Wall");
+
+			LOG("%@&fb% Comission %#xtarget% is &bIce Walker Slayer.");
+
+		//Golden Goblin Slayer	
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Golden Goblin Slayer")
+		
+			SET(@&commission[%#xtarget%],"Golden Goblin Slayer");
+			SET(@#priority[%#xtarget%],2);
+			SET(@&cmsnloc[%#xtarget%],"Rampart's Quarry");
+
+			LOG("%@&fb% Comission %#xtarget% is &bGolden Goblin Slayer");
+
+		//Goblin Slayer	
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Goblin Slayer")
+		
+			SET(@&commission[%#xtarget%],"Goblin Slayer");
+			SET(@#priority[%#xtarget%],3);
+			SET(@&cmsnloc[%#xtarget%],"Goblin Burrows");
+
+			LOG("%@&fb% Comission %#xtarget% is &bGoblin Slayer");
+
+		//Mithril Miner
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Mithril Miner")
+		
+			SET(@&commission[%#xtarget%],"Mithril Miner");
+			SET(@#priority[%#xtarget%],1);
+			SET(@&cmsnloc[%#xtarget%],"ANY");
+
+			LOG("%@&fb% Comission %#xtarget% is &bMithril Miner");
+			
+
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Titanium Miner")
+		
+			SET(@&commission[%#xtarget%],"Titanium Miner");
+			SET(@#priority[%#xtarget%],1);
+			SET(@&cmsnloc[%#xtarget%],"ANY");
+
+			LOG("%@&fb% Comission %#xtarget% is &bTitanium Miner");
+
+		//	------------------------------
+		//	- LOCATION BASED COMMISSIONS -
+		//	------------------------------
+
+		//Mithril
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Mithril")
+			
+			&flog = "%@&fb% Comission %#xtarget% is &bMithril in ";
+			DO(1)
+				IFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Rampart's Quarry")
+					
+					SET(@&commission[%#xtarget%],"Mithril Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Rampart's Quarry");
+
+					&flog = "%&flog%Rampart's Quarry";
+
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Royal Mines")
+				
+					SET(@&commission[%#xtarget%],"Mithril Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Royal Mines");
+
+					&flog = "%&flog%Royal Mines";
+
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Cliffside Veins")
+				
+					SET(@&commission[%#xtarget%],"Mithril Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Cliffside Mines");
+
+					&flog = "%&flog%Cliffside Veins";
+
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Lava Springs")
+				
+					SET(@&commission[%#xtarget%],"Mithril Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Lava Springs");
+
+					&flog = "%&flog%Lava Springs";
+
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Upper Mines")
+				
+					SET(@&commission[%#xtarget%],"Mithril Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Upper Mines");
+
+					&flog = "%&flog%Upper Mines";
+
+				ELSE
+
+					SET(@&commission[%#xtarget%],"Mithril Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"ANY");
+
+					&flog = "%@&fb% Commission's location not found!";
+
+				ENDIF
+			WHILE
+
+			LOG("%&flog%");
+
+		//Titanium
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Titanium")
+			
+			&flog = "%@&fb% Comission %#xtarget% is &bTitanium in ";
+			DO(1)
+				IFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Rampart's Quarry")
+				
+					SET(@&commission[%#xtarget%],"Titanium Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Rampart's Quarry");
+
+					&flog = "%&flog%Rampart's Quarry";
+
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Royal Mines")
+				
+					SET(@&commission[%#xtarget%],"Titanium Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Royal Mines");
+
+					&flog = "%&flog%Royal Mines";
+					
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Cliffside Veins")
+				
+					SET(@&commission[%#xtarget%],"Titanium Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Cliffside Veins");
+
+					&flog = "%&flog%Cliffside Veins";
+
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Lava Springs")
+				
+					SET(@&commission[%#xtarget%],"Titanium Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Lava Springs");
+
+					&flog = "%&flog%Lava Springs";
+
+				ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Upper Mines")
+				
+					SET(@&commission[%#xtarget%],"Titanium Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"Upper Mines");
+
+					&flog = "%&flog%Upper Mines";
+
+				ELSE
+
+					SET(@&commission[%#xtarget%],"Titanium Miner");
+					SET(@#priority[%#xtarget%],1);
+					SET(@&cmsnloc[%#xtarget%],"ANY");
+
+					&flog = "%@&fb% Commission's location not found!";
+
+				ENDIF
+			WHILE
+			LOG("%&flog%");
+
+		//	---------------------------
+		//	- EVENT BASED COMMISSIONS -
+		//	---------------------------
+		// Goblin Raid Participation
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Goblin Raid Slayer")
+		
+			LOG("%@&fb% Comission %#xtarget% is &bGoblin Raid Slayer");
+
+		// Goblin Raid
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Goblin Raid")
+		
+			LOG("%@&fb% Comission %#xtarget% is &bGoblin Raid");
+
+		// Powder Ghast Puncher
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Powder Ghast Puncher")
+		
+			LOG("%@&fb% Comission %#xtarget% is &bPowder Ghast Puncher");
+
+		// Raffle
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Raffle")
+		
+			LOG("%@&fb% Comission %#xtarget% is &bRaffle");
+
+		// Lucky Raffle
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Lucky Raffle")
+		
+			LOG("%@&fb% Comission %#xtarget% is &bLucky Raffle");
+
+		// Star Sentry Puncher
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"Star Sentry Puncher")
+		
+			LOG("%@&fb% Comission %#xtarget% is &Star Sentry Puncher");
+
+		// 2x Mithril Powder Collector
+		ELSEIFCONTAINS(%&cmsnarray[%#cmsnlp%]%,"2x Mithril Powder Collector")
+		
+			LOG("%@&fb% Comission %#xtarget% is &b2x Mithril Powder Collector");
+
+		// Comission not found.
+		ELSE
+
+			LOG("%@&fb% Commission not found for %#xtarget%!");
+
+		ENDIF
+		ENDUNSAFE
+
+		INC(#xtarget,1);
+		
+	NEXT
+	
+
+	//Now pick which one to do
+	EXEC(FBM_Task.txt,"FBM_Task");
+	
+}$$
+

@@ -1,0 +1,74 @@
+$${
+
+	//Close any opened guis
+	GUI();
+
+	//Set Baritone
+	SETTING(allowWalkOnBottomSlab,true);
+	SETTING(allowWaterBucketFall,false);
+	SETTING(assumeStep,true);
+	SETTING(assumeSafeWalk,true);
+	SETTING(sprintAscends,true);
+	SETTING(sprintInWater,true);
+	SETTING(maxFallHeightNoWater,250);
+	SETTING(allowPlace,false);
+	SETTING(fadePath,true);
+	SETTING(blocksToAvoid,ladder);
+	SETTING(chatDebug,false);
+	SETTING(echoCommands,false);
+	SETTING(allowOvershootDiagonalDescend,true);
+	SETTING(allowSprint,true);
+	//SETTING(overshootTraverse,false);
+	//Performace causing settings
+	//SETTING(avoidance,true);
+	//SETTING(blocksToAvoid,"ladder,fence,fence_gate");
+
+	//	==============================================
+	//	Milestone 1
+	//		Emmissionary Carlton	(Rampart's Quarry)
+	//		Emmissionary Ceanna		(Cliffside Veins)
+	//	==============================================
+	//	Milestone 2
+	//		Emmissionary Wilson		(Royal Mines)
+	//		Emmissionary Lilith		(Lava Springs)
+	//	==============================================
+	//	Milestone 3
+	//		Emmissionary Fraiser	(Upper Mines)
+	//		Emmissionary Ceanna		(Dwarven Village)
+	//	==============================================
+
+	//Set Variables
+	SET(@mine,false);
+	SET(@refuel,false);
+	SET(@speedboost,true);
+	SET(@claim,false);
+	SET(@default,false);
+	SET(@sellinv,false);
+	SET(@commissionmine,false);
+	SET(@ongoing,false);
+
+	//Other
+	SET(@#cmsnx,999);
+	SET(@#cmsny,999);
+	SET(@#cmsnz,999);
+	FOR(#cmsnlp,1,3)
+		SET(@&commission[%#cmsnlp%],"UNKNOWN");
+		SET(@&cmsnloc[%#cmsnlp%],"UNKNOWN");
+		SET(@#priority[%#cmsnlp%],999);
+	NEXT
+
+	//Set Prefixes
+	SET(@&fb, "&r&l&4&m-&r&l&4[ &6Fish Boys &4]&l&4&m-&r&f");
+	//GET COMMISSION
+
+	
+	EXEC(FBM_Baritone.txt,"FBM_Baritone");
+	EXEC(FBM_Commissions.txt,"FBM_Commissions");
+	//EXEC(FBM_Mine.txt,"FBM_Mine");
+	//EXEC(FBM_Target.txt,"FBM_Target");
+
+	//Execute
+
+}$$
+
+

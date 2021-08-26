@@ -1,0 +1,30 @@
+$${
+
+DO
+
+	IF(@mine)
+		IF((HITID == "wool") || (HITID == "prismarine") || (HIT_VARIANT == "smooth_diorite") || (HITID == "lapis_ore") || (HITID == "gold_ore") || (HITID == "lit_redstone_ore") || (HITID == "redstone_ore") || (HITID == "diamond_ore") || (HITID == "emerald_ore")  || (HITID == "stained_hardened_clay"))
+			KEY(ATTACK);
+		ENDIF
+	ENDIF
+
+	//Double check commission
+	IF(#cmsntmr >= 2500);
+		//Check if Baritone is doing something.
+		IF((!@refuel) && (!@ongoing))
+			EXEC(FBM_Commissions.txt,"FBM_Commissions");
+			SET(#cmsntmr,0);
+		ENDIF
+	ENDIF
+	INC(#cmsntmr,1);
+
+	IFINVISFULL()
+		SET(@sellinv,true);
+	ENDIF
+	
+UNTIL
+	
+LOOP
+}$$
+
+

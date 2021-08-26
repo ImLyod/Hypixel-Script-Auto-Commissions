@@ -1,0 +1,292 @@
+$${
+	SET(#pkaxe,0);
+	SET(#sfuel,0);
+	DO
+		//Check if is in Rampart
+		//"Village", "Your Island"
+
+		//Go to Rampart
+		//IF BOOL IS TRUE
+		//DO
+		//Check Commission 1 to 3 if doable
+		//Get Commission
+		//See if location is needed.
+		//UNTIL FINISHED
+
+		//IF ALL DISABLED GO DEFAULT
+
+	//Refuel time
+		IF(@refuel)
+			SET(@refuel,false);
+			DO(1)
+				LOG(%@&fb% Fuel tank ran out... refueling.);
+				DO
+					IF(%PATHFINDING%)
+
+					ELSE
+						STOP("FBM_Mine");
+						SET(@mine,false);
+						GOTO(-9,145,-18);
+					ENDIF
+						
+				UNTIL((%XPOS% == -9) && (%YPOS% == 145) && (%ZPOS% == -18))
+
+				WAIT(1000ms);
+				CALCYAWTO(-7,-19,#yaw);
+
+				#yaw = ((%#yaw%)-180);
+				IF(#yaw < 0)
+					#yaw = (360+(%#yaw%));
+				ENDIF
+
+				LOOK(%#yaw%,5,0.2);
+				WAIT(500ms);
+				KEY(ATTACK);
+
+				DO
+					WAIT(1ms);
+				UNTIL(%GUI% == "GUICHEST")
+				WAIT(1250ms);
+
+				//CHECK FOR DRILLS & FUEL
+				FOR(#slot,54,88)
+
+					&id = getslotitem(%#slot%,&idvar);
+					IF(#pkaxe == 0)
+						IF((%&idvar% == "prismarine_shard") || (%&idvar% == "stone_pickaxe") || (%&idvar% == "iron_pickaxe") || (%&idvar% == "golden_pickaxe"))
+							DO(1)
+								SET(#pkaxe,%#slot%);
+								SLOTCLICK(%#slot%,left,true);
+							UNTIL
+						ENDIF
+					ENDIF
+
+				NEXT
+
+				LOG(Checking for fuel);
+
+				FOR(#slot,54,88)
+
+					&id = getslotitem(%#slot%,&idvar);
+					IF((#sfuel == 0) && (#pkaxe > 0))
+						IF((%&idvar% == "dye"))
+							DO(1)
+								SET(#sfuel,%#slot%);
+								SLOTCLICK(%#slot%,left,true);
+							UNTIL
+						ENDIF
+					ENDIF
+
+				NEXT
+
+				IF((#pkaxe == 0) || (#sfuel == 0))
+					LOG(%@&fb% You have no fuel in your Inventory. Stopping script.);
+					STOP(ALL);
+				ELSE
+					WAIT(50ms);
+					SLOTCLICK(22,left,false);
+					WAIT(500ms);
+					SLOTCLICK(13,left,true);
+				ENDIF
+
+				GUI();
+
+				//Check if holding pickaxe
+				SLOT(1);
+				IF(%MAINHANDITEM% != "prismarine_shard")
+
+					GUI(INVENTORY);
+					WAIT(100ms);
+					SET(%#inventoryswapper%,0);
+
+					FOR(#slot,9,35)
+						&id = getslotitem(%#slot%,&idvar);
+						IF((%&idvar% == "prismarine_shard"))
+							DO
+								IFINVISFULL()
+									SLOTCLICK(36,left,false);
+									WAIT(250ms);
+									SLOTCLICK(%#slot%,left,true);
+									WAIT(250ms)
+									SLOTCLICK(%#slot%,left,false);
+									SET(#inventoryswapper,%#slot%);
+								ELSE
+									SLOTCLICK(36,left,true);
+									WAIT(250ms);
+									SLOTCLICK(%#slot%,left,true);
+									SET(#inventoryswapper,%#slot%);
+								ENDIF
+							UNTIL(%#inventoryswapper% > 0)
+							BREAK;
+						ENDIF
+					NEXT
+
+					SET(#inventoryswapper,0);
+					WAIT(100ms);
+					GUI();
+				ENDIF
+				SET(#pkaxe,0);
+				SET(#sfuel,0);
+				SET(@ongoing,false);
+
+				//CHECK NEXT TASK
+				EXEC(FBM_Task.txt,"FBM_Task");
+			UNTIL
+		ENDIF
+
+	//	Use Speedboost
+		IF(@speedboost)
+			SET(@speedboost,false);
+			DO(5)
+				KEY(USE);
+				WAIT(250ms);
+			UNTIL
+			SET(@ongoing,false);
+		ENDIF
+
+	//	Claim Commissions
+		IF(@claim)
+
+			//TO-DO Check for milestone and add all npc to it.
+			SET(@claim,false);
+			DO(1)
+				LOG(%@&fb% Commission is done getting new commission.);
+				DO
+					IF(%PATHFINDING%)
+
+					ELSE
+						STOP("FBM_Mine");
+						SET(@mine,false);
+						GOTO(42,134,21);
+					ENDIF
+						
+				UNTIL((%XPOS% == 42) && (%YPOS% == 134) && (%ZPOS% == 21))
+
+				WAIT(1000ms);
+				CALCYAWTO(42,134,#yaw);
+
+				#yaw = ((%#yaw%)-180);
+				IF(#yaw < 0)
+					#yaw = (360+(%#yaw%));
+				ENDIF
+
+				LOOK(%#yaw%,5,0.2);
+				WAIT(500ms);
+				KEY(ATTACK);
+
+				DO
+					WAIT(1ms);
+				UNTIL(%GUI% == "GUICHEST")
+				WAIT(1250ms);
+
+				FOR(#slot,0,35)
+
+					&id = getslotitem(%#slot%,&idvar);
+					IF(&id == "writable_book")
+						WAIT(100ms);
+						SLOTCLICK(%#slot%,left,false);
+					ENDIF
+
+				NEXT
+
+				IF(%GUI% == "GUICHEST")
+					gui();
+				ENDIF
+				SET(@ongoing,false);
+				EXEC(FBM_Commissions.txt,"FBM_Commissions");
+			UNTIL
+
+		ENDIF
+
+	//	Mining Commissions
+		IF(@commissionmine)
+			SET(@commissionmine,false);	
+			DO(1)
+
+				STOP("FBM_Mine");
+				SET(@mine,false);
+				//Go to location
+				DO
+					IF(%PATHFINDING%)
+					ELSE
+						GOTO(%@#cmsnx%,%@#cmsny%,%@#cmsnz%);
+					ENDIF
+				UNTIL((%XPOS% == %@#cmsnx%) && (%YPOS% == %@#cmsny%) && (%ZPOS% == %@#cmsnz%))
+				WAIT(500ms);
+				KEYDOWN(SNEAK);
+				DO
+					IF(%PATHFINDING%)
+					ELSE
+						GOTO(%@#cmsnx%,%@#cmsny%,%@#cmsnz%);
+					ENDIF
+				UNTIL((%XPOS% == %@#cmsnx%) && (%YPOS% == %@#cmsny%) && (%ZPOS% == %@#cmsnz%))
+				KEYUP(SNEAK);
+				WAIT(500ms);
+				//RESET
+				EXEC(FBM_Mine.txt,"FBM_Mine");
+				SET(@ongoing,false);
+			UNTIL	
+
+		ENDIF
+
+	//	Sell Inventory
+		IF(@sellinv);
+			SET(@sellinv,false);
+			DO(1)
+				ECHO("/bz");
+				WAIT(1000ms);
+				SLOTCLICK(38,left,false);
+				WAIT(100ms);
+				SLOTCLICK(39,left,false);
+				WAIT(100ms);
+				GUI();
+			UNTIL
+			SET(@ongoing,false);
+		ENDIF
+
+	//	Set to default pathing
+		IF(@default)
+			SET(@default,false);
+			DO(1)
+				DO
+					IF(PATHFINDING)
+
+
+
+					ELSE
+						STOP("FBM_Mine");
+						SET(@mine,false);
+						GOTO(-153,171,-43);
+					ENDIF
+				UNTIL((%XPOS% == -153) && (%YPOS% == 171) && (%ZPOS% == -43))
+
+				KEYDOWN(SNEAK);
+				DO
+					IF(%PATHFINDING%)
+					ELSE
+						GOTO(-153,171,-43);
+					ENDIF
+				UNTIL((%XPOS% == -153) && (%YPOS% == 171) && (%ZPOS% == -43))
+				KEYUP(SNEAK);
+
+				WAIT(100ms);
+				LOOK(135,0,0.25);
+				WAIT(500ms);
+				KEYDOWN(FORWARD);
+				WAIT(500ms);
+				KEYUP(FORWARD);
+
+				//RESET
+				SET(@ongoing,false);
+				EXEC(FBM_Mine.txt,"FBM_Mine");
+			UNTIL
+		ENDIF
+
+
+
+	//UNTIL EVERY BOOL IS DISABLED
+	UNTIL
+
+LOOP
+}$$
+
