@@ -1,5 +1,7 @@
 # Auto Commissions Script for Hypixel Skyblock
 
+# Discord @ Lyod#0001
+
 ### Unfinished project, you can finish it yourself by just fixing the yaw/pitch in FBM_Mine
 #### Or not, it should work fine without fixing it but it's better if you fix it yourself :)
  
