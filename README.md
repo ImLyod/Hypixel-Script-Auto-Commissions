@@ -7,6 +7,7 @@
 - Auto Mine
 - Auto Refuel
 - Gets Commissions Automatically
+- Humanized Mining (You can change the settings if you wanna mine faster)
 - I forgot, I haven't touched this in almost a year. LMAO
 
 #### Required Mods -
