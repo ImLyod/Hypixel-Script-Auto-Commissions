@@ -26,4 +26,9 @@
 - [Klacaiba by spthiel](https://spthiel.github.io/Modules/modules/nei/module_Klacaiba-2.7.0-26.1-0.15.4-mc1.12.1.jar)
 - [GetSlotItemExtended by Seferan](https://spthiel.github.io/Modules/modules/getslotitemext/module_GetSlotItemExtended-0.4-26.1-0.15.4-mc1.12.1.jar)
 
+#### How do I used this? -
+- Download Macro / Keybind mod above and follow their instructions.
+- Everything should be self explainatory from then on.
+- Everything for Required Mods is a forge mod while the other one is a module for Macro/Keybind Mod
+
 ![AVATAR](https://user-images.githubusercontent.com/35439005/131016224-160c652c-4d69-4ca4-8016-114d99b6c33f.png)
