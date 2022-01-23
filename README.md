@@ -2,7 +2,6 @@
 
 ### Any Questions??
 #### Ask them [here](https://github.com/ImLyod/Hypixel-Script-Auto-Commissions/issues)
-#### Or add my Discord @ Lyod#7533
 
 ![image](https://i.imgur.com/SVsa1wz.gif)
 
